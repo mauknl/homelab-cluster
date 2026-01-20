@@ -1,0 +1,152 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vscode
+---
+# 1. The Password Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: code-server-auth
+  namespace: vscode
+stringData:
+  password: "ipadcoder"
+---
+# 2. The Storage (Hard Drive Space)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: code-pvc
+  namespace: vscode
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 25Gi
+  storageClassName: local-path
+---
+# 3. The Application (Deployment)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server
+  namespace: vscode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: code-server
+  template:
+    metadata:
+      labels:
+        app: code-server
+    spec:
+      # A. PIN TO PI 5 MASTER
+      nodeSelector:
+        kubernetes.io/hostname: rpi5-master
+
+      containers:
+      - name: code-server
+        image: lscr.io/linuxserver/code-server:latest
+        imagePullPolicy: Always
+
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - |
+                  # Run in background to avoid blocking startup
+                  nohup bash -c '
+                  echo "🚀 [K8s Hook] Starting installation..." > /config/install.log
+
+                  # 1. Wait for Internet
+                  for i in {1..30}; do ping -c 1 8.8.8.8 && break; sleep 1; done
+
+                  # 2. Update & Install Tools
+                  apt-get update
+                  apt-get install -y wget curl git golang-go r-base python3-pip python3-venv build-essential
+
+                  # 3. Install Julia (Manual Check)
+                  if [ ! -f "/usr/local/bin/julia" ]; then
+                    echo "☕ Downloading Julia..." >> /config/install.log
+                    wget -q https://julialang-s3.julialang.org/bin/linux/aarch64/1.9/julia-1.9.4-linux-aarch64.tar.gz -O /tmp/julia.tar.gz
+                    mkdir -p /opt/julia
+                    tar -xzf /tmp/julia.tar.gz -C /opt/julia --strip-components 1
+                    ln -sf /opt/julia/bin/julia /usr/local/bin/julia
+                    rm /tmp/julia.tar.gz
+                  fi
+
+                  echo "✅ [K8s Hook] Installation Complete!" >> /config/install.log
+                  ' > /config/k8s-debug.log 2>&1 &
+
+        # C. ENVIRONMENT VARIABLES (For Permissions)
+        env:
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: code-server-auth
+              key: password
+        - name: PUID
+          value: "1000"  # Matches the 'pi' user
+        - name: PGID
+          value: "1000"  # Matches the 'pi' group
+        - name: TZ
+          value: "Europe/Amsterdam" # Sets the correct time
+
+        ports:
+        - containerPort: 8443 # LinuxServer uses 8443 internally
+
+        # D. MOUNT STORAGE TO THE CORRECT PATH
+        volumeMounts:
+        - name: code-storage
+          mountPath: /config  # LinuxServer stores everything here
+      volumes:
+      - name: code-storage
+        persistentVolumeClaim:
+          claimName: code-pvc
+---
+# 4. The Internal Network
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server
+  namespace: vscode
+spec:
+  ports:
+  - port: 80
+    targetPort: 8443 # Maps Port 80 to LinuxServer's 8443
+  selector:
+    app: code-server
+---
+# 5. The Public Address
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: code-server
+  namespace: vscode
+  annotations:
+    # This forces traffic to use the Secure port (443)
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  ingressClassName: traefik
+  # A. This turns on the "Lock" Icon
+  tls:
+  - hosts:
+    - code.192.168.1.179.nip.io
+    secretName: code-tls
+
+  # B. The routing rules
+  rules:
+  - host: code.192.168.1.179.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: code-server
+            port:
+              number: 80
