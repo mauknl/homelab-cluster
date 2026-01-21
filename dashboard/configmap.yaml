@@ -33,14 +33,16 @@ data:
             description: Remote IDE
 
   kubernetes.yaml: |
-    local:
+    my-cluster:
       mode: cluster
       tls-skip-verify: true
 
   widgets.yaml: |
     - kubernetes:
         cluster:
+          source: my-cluster
           label: "K3s Cluster"
+          icon: k3s
           show: true
           cpu: true
           memory: true
