@@ -23,6 +23,7 @@ data:
   kubernetes.yaml: |
     main-cluster:
       mode: cluster
+      serviceAccount: true
       url: https://kubernetes.default.svc
       tls-skip-verify: true
 
