@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homepage-ingress
+  namespace: dashboard
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - home.192.168.1.179.nip.io
+    secretName: wildcard-tls
+  rules:
+  - host: home.192.168.1.179.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: homepage
+            port:
+              number: 80

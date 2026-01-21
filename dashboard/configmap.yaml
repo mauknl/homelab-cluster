@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: dashboard
+data:
+  # 1. General Settings
+  settings.yaml: |
+    title: My Home Lab
+    background: https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80
+    theme: dark
+    layout:
+      Infrastructure:
+        style: row
+        columns: 2
+      Development:
+        style: row
+        columns: 2
+
+  # 2. The Buttons (Your Apps)
+  services.yaml: |
+    - Infrastructure:
+        - Argo CD:
+            href: https://argocd.192.168.1.179.nip.io
+            icon: argocd.png
+            description: GitOps Engine
+        - Rancher:
+            href: https://rancher.192.168.1.179.nip.io
+            icon: rancher.png
+            description: Cluster Manager
+
+    - Development:
+        - VS Code:
+            href: https://code.192.168.1.179.nip.io
+            icon: vscode.png
+            description: Remote IDE
+
+  # 3. Widgets (Optional - can be empty for now)
+  widgets.yaml: |
+    - resources:
+        cpu: true
+        memory: true
+        disk: /
