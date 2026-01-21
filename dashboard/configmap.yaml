@@ -42,7 +42,6 @@ data:
     - kubernetes:
         cluster:
           icon: k3s
-          show: true
           cpu: true
           memory: true
     - search:
