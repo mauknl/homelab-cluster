@@ -20,7 +20,7 @@ data:
     - Infrastructure:
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
-            icon: argocd.png
+            icon: argo-cd.png
             description: GitOps
         - Rancher:
             href: https://rancher.192.168.1.179.nip.io
@@ -33,6 +33,22 @@ data:
             description: Remote IDE
 
   widgets.yaml: |
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "My K3s Cluster"
+        nodes:
+          show: true
+          cpu: true
+          memory: true
     - resources:
+        label: "Master Node (Pi 5)"
         cpu: false
         memory: false
+        disk: /
+    - search:
+        provider: google
+        target: _blank
