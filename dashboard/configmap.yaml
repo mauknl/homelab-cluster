@@ -4,11 +4,10 @@ metadata:
   name: homepage-config
   namespace: dashboard
 data:
-  # 1. General Settings
   settings.yaml: |
     title: My Home Lab
-    background: https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80
     theme: dark
+    color: slate
     layout:
       Infrastructure:
         style: row
@@ -17,27 +16,33 @@ data:
         style: row
         columns: 2
 
-  # 2. The Buttons (Your Apps)
   services.yaml: |
     - Infrastructure:
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argocd.png
-            description: GitOps Engine
+            description: GitOps
         - Rancher:
             href: https://rancher.192.168.1.179.nip.io
             icon: rancher.png
             description: Cluster Manager
-
     - Development:
         - VS Code:
             href: https://code.192.168.1.179.nip.io
             icon: vscode.png
             description: Remote IDE
 
-  # 3. Widgets (Optional - can be empty for now)
   widgets.yaml: |
     - resources:
-        cpu: true
-        memory: true
-        disk: /
+        cpu: false
+        memory: false
+
+  bookmarks.yaml: |
+    []
+
+  docker.yaml: |
+    {}
+
+  # FIX: Add this missing file so the app doesn't try to create it
+  kubernetes.yaml: |
+    {}
