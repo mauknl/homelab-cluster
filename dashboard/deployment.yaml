@@ -13,6 +13,8 @@ spec:
       labels:
         app: homepage
     spec:
+      serviceAccountName: homepage-user
+
       # 1. The Helper (Init Container)
       initContainers:
       - name: copy-config

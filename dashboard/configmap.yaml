@@ -21,7 +21,7 @@ data:
       finnhub: {{FINNHUB_TOKEN}}
 
   kubernetes.yaml: |
-    my-cluster:
+    main-cluster:
       mode: cluster
       url: https://kubernetes.default.svc
       tls-skip-verify: true
@@ -34,11 +34,10 @@ data:
             description: "Pi Cluster Stats"
             widget:
               type: kubernetes
-              cluster: my-cluster  # Matches the key in kubernetes.yaml
+              cluster: main-cluster  # Matches the key in kubernetes.yaml
               cpu: true
               memory: true
               nodes: true
-            insecure: true
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
