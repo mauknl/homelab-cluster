@@ -16,6 +16,10 @@ data:
         style: row
         columns: 2
 
+  settings.yaml: |
+    providers:
+      finnhub: {{FINNHUB_TOKEN}}
+
   services.yaml: |
     - Infrastructure:
         - Argo CD:
