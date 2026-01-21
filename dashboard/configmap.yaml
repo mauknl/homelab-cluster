@@ -29,16 +29,16 @@ data:
   services.yaml: |
     - Infrastructure:
         - My K3s Cluster:
-            icon: k3s
+            icon: kubernetes
             href: https://192.168.1.179:6443
             description: "Pi Cluster Stats"
-            ping: https://kubernetes.default.svc/healthz
             widget:
               type: kubernetes
               cluster: my-cluster  # Matches the key in kubernetes.yaml
               cpu: true
               memory: true
               nodes: true
+            insecure: true
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
