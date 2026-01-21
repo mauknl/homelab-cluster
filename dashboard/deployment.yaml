@@ -16,7 +16,8 @@ spec:
       # 1. The Helper (Init Container)
       initContainers:
       - name: copy-config
-        image: busybox
+        image: ghcr.io/gethomepage/homepage:latest
+        imagePullPolicy: IfNotPresent
         # This copies your settings from the Read-Only source to the Writable destination
         # -L follows links (crucial for ConfigMaps)
         command: ['sh', '-c', 'cp -L /config-source/* /app/config/']
