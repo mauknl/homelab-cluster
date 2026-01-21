@@ -26,6 +26,7 @@ data:
             icon: k3s
             href: https://192.168.1.179:6443
             description: "Pi Cluster Stats"
+            ping: https://kubernetes.default.svc
             widget:
               type: kubernetes
               cluster: local  # Matches the key in kubernetes.yaml
@@ -49,7 +50,7 @@ data:
   kubernetes.yaml: |
     my-cluster:
       mode: cluster
-      url: hhttps://kubernetes.default.svc
+      url: https://kubernetes.default.svc
       tls-skip-verify: true
 
   widgets.yaml: |
