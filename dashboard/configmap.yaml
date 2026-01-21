@@ -53,6 +53,16 @@ data:
       tls-skip-verify: true
 
   widgets.yaml: |
+    - stocks:
+        type: stocks
+        provider: finnhub
+        color: true # optional, defaults to true
+        cache: 15 # optional, default caches results for 1 minute
+        watchlist:
+          - BTC
+          - ADA
+          - SOL
+          - XVG
     - search:
         provider: google
         target: _blank
