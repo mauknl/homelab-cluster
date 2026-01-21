@@ -44,11 +44,9 @@ data:
           show: true
           cpu: true
           memory: true
-    - resources:
-        label: "Master Node (Pi 5)"
-        cpu: false
-        memory: false
-        disk: /
     - search:
         provider: google
         target: _blank
+    - datetime:
+	format:
+	  timeStyle: short
