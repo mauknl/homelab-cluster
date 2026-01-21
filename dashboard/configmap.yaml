@@ -43,11 +43,6 @@ data:
       tls-skip-verify: true
 
   widgets.yaml: |
-    - kubernetes:
-        cluster:
-          icon: k3s
-          cpu: true
-          memory: true
     - search:
         provider: google
         target: _blank
