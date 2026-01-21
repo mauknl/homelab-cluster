@@ -35,6 +35,7 @@ data:
   kubernetes.yaml: |
     my-cluster:
       mode: cluster
+      url: https://kubernetes.default.svc
       tls-skip-verify: true
 
   widgets.yaml: |
