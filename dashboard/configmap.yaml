@@ -39,7 +39,7 @@ data:
           cpu: true
           memory: true
           showLabel: true
-          label: "My K3s Cluster"
+          label: "K3s Cluster"
         nodes:
           show: true
           cpu: true
@@ -48,5 +48,5 @@ data:
         provider: google
         target: _blank
     - datetime:
-	format:
-	  timeStyle: short
+        format:
+          timeStyle: short
