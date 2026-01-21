@@ -35,6 +35,7 @@ data:
   kubernetes.yaml: |
     local:
       mode: cluster
+      tls-skip-verify: true
 
   widgets.yaml: |
     - kubernetes:
