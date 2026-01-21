@@ -37,6 +37,11 @@ spec:
           value: "home.192.168.1.179.nip.io"
         - name: LOG_LEVEL
           value: "debug"
+        - name: FINNHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: homepage-secrets
+              key: finnhub_token
         volumeMounts:
         # We only mount the Writable version here
         - name: app-config
