@@ -45,13 +45,19 @@ data:
           show: true
           cpu: true
           memory: true
-        nodes:
-          show: true
-          cpu: true
-          memory: true
     - search:
         provider: google
         target: _blank
+    - stocks:
+        type: stocks
+        provider: finnhub
+        color: true # optional, defaults to true
+        cache: 15 # optional, default caches results for 1 minute
+        watchlist:
+          - BTC
+          - ADA
+          - SOL
+          - XVG
     - datetime:
         format:
           timeStyle: short
