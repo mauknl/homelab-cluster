@@ -36,13 +36,3 @@ data:
     - resources:
         cpu: false
         memory: false
-
-  bookmarks.yaml: |
-    []
-
-  docker.yaml: |
-    {}
-
-  # FIX: Add this missing file so the app doesn't try to create it
-  kubernetes.yaml: |
-    {}
