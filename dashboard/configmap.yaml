@@ -22,6 +22,16 @@ data:
 
   services.yaml: |
     - Infrastructure:
+        - My K3s Cluster:
+            icon: k3s
+            href: https://192.168.1.179:6443
+            description: "Pi Cluster Stats"
+            widget:
+              type: kubernetes
+              cluster: local  # Matches the key in kubernetes.yaml
+              cpu: true
+              memory: true
+              nodes: true
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
@@ -39,7 +49,7 @@ data:
   kubernetes.yaml: |
     my-cluster:
       mode: cluster
-      url: https://10.43.0.1
+      url: hhttps://kubernetes.default.svc
       tls-skip-verify: true
 
   widgets.yaml: |
