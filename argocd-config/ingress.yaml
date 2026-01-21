@@ -4,7 +4,6 @@ metadata:
   name: argocd-server-ingress
   namespace: argocd
   annotations:
-    # If you use Traefik (standard K3s), these handle SSL "passthrough"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
@@ -19,6 +18,3 @@ spec:
             name: argocd-server
             port:
               number: 80
-  tls:
-  - hosts:
-    - argocd.192.168.1.179.nip.io

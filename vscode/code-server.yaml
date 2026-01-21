@@ -3,16 +3,7 @@ kind: Namespace
 metadata:
   name: vscode
 ---
-# 1. The Password Secret
-apiVersion: v1
-kind: Secret
-metadata:
-  name: code-server-auth
-  namespace: vscode
-stringData:
-  password: "ipadcoder"
----
-# 2. The Storage (Hard Drive Space)
+# The Storage (Hard Drive Space)
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -26,7 +17,7 @@ spec:
       storage: 25Gi
   storageClassName: local-path
 ---
-# 3. The Application (Deployment)
+# The Application (Deployment)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
