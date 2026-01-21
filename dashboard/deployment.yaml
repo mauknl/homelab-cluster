@@ -13,6 +13,20 @@ spec:
       labels:
         app: homepage
     spec:
+      # 1. The Helper (Init Container)
+      initContainers:
+      - name: copy-config
+        image: busybox
+        # This copies your settings from the Read-Only source to the Writable destination
+        # -L follows links (crucial for ConfigMaps)
+        command: ['sh', '-c', 'cp -L /config-source/* /app/config/']
+        volumeMounts:
+        - name: config-source
+          mountPath: /config-source
+        - name: app-config
+          mountPath: /app/config
+
+      # 2. The Main Application
       containers:
       - name: homepage
         image: ghcr.io/gethomepage/homepage:latest
@@ -22,16 +36,20 @@ spec:
         - name: HOMEPAGE_ALLOWED_HOSTS
           value: "home.192.168.1.179.nip.io"
         volumeMounts:
-        - name: config
+        # We only mount the Writable version here
+        - name: app-config
           mountPath: /app/config
-        - name: logs
-          mountPath: /app/config/logs
+
+      # 3. The Storage Volumes
       volumes:
-      - name: config
+      # The Read-Only ConfigMap (Your Git files)
+      - name: config-source
         configMap:
           name: homepage-config
-      - name: logs
+      # The Writable Scratchpad (Empty start, filled by helper)
+      - name: app-config
         emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
