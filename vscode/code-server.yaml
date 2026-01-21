@@ -127,7 +127,7 @@ spec:
   tls:
   - hosts:
     - code.192.168.1.179.nip.io
-    secretName: code-tls
+    secretName: wildcard-tls
 
   # B. The routing rules
   rules:
