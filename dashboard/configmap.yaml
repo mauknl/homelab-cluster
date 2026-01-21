@@ -35,14 +35,12 @@ data:
   kubernetes.yaml: |
     my-cluster:
       mode: cluster
-      url: https://kubernetes.default.svc
+      url: https://10.43.0.1
       tls-skip-verify: true
 
   widgets.yaml: |
     - kubernetes:
         cluster:
-          source: my-cluster
-          label: "K3s Cluster"
           icon: k3s
           show: true
           cpu: true
