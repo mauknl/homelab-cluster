@@ -32,14 +32,17 @@ data:
             icon: vscode.png
             description: Remote IDE
 
+  kubernetes.yaml: |
+    local:
+      mode: cluster
+
   widgets.yaml: |
     - kubernetes:
         cluster:
+          label: "K3s Cluster"
           show: true
           cpu: true
           memory: true
-          showLabel: true
-          label: "K3s Cluster"
         nodes:
           show: true
           cpu: true
