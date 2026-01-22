@@ -22,7 +22,7 @@ spec:
       - name: glances
         image: nicolargo/glances:latest-full
         # "-w" starts web server
-        command: ["/usr/local/bin/glances", "-w"]
+        command: ["/usr/local/bin/glances", "-w", "-t", "10"]
         securityContext:
           # 3. Grant hardware access (Fixes Temperature & permissions)
           privileged: true
