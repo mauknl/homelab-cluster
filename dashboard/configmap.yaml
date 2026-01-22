@@ -18,6 +18,28 @@ data:
 
   services.yaml: |
     - Infrastructure:
+        - Raspberry Pi 5:
+            icon: raspberry-pi
+            # Clicking opens the full dashboard with Temp/Network/Process info
+            href: http://192.168.1.179:61208
+            description: "Master Node"
+            widget:
+              type: glances
+              url: http://192.168.1.179:61208
+              cpu: true
+              memory: true
+              disk: /
+        - Raspberry Pi 4:
+            icon: raspberry-pi
+            # Clicking opens the full dashboard with Temp/Network/Process info
+            href: http://192.168.1.129:61208
+            description: "Worker Node"
+            widget:
+              type: glances
+              url: http://192.168.1.179:61208
+              cpu: true
+              memory: true
+              disk: /
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
