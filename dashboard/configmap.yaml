@@ -26,9 +26,11 @@ data:
             widget:
               type: glances
               url: http://192.168.1.179:61208
+              version: 4
               cpu: true
               memory: true
               disk: /
+              cputemp: true
         - Raspberry Pi 4:
             icon: raspberry-pi
             # Clicking opens the full dashboard with Temp/Network/Process info
@@ -37,9 +39,11 @@ data:
             widget:
               type: glances
               url: http://192.168.1.179:61208
+              version: 4
               cpu: true
               memory: true
               disk: /
+              cputemp: true
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
