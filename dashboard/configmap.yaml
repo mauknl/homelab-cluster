@@ -40,7 +40,7 @@ data:
       tls-skip-verify: true
 
   widgets.yaml: |
-    - kubernetes
+    - kubernetes:
         icon: kubernetes
         cluster: main-cluster
         cpu: true
