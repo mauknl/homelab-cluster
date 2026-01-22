@@ -18,7 +18,7 @@ spec:
       # 1. The Helper (Init Container)
       initContainers:
       - name: copy-config
-        image: ghcr.io/gethomepage/homepage:latest
+        image: ghcr.io/gethomepage/homepage:v1.9.0
         imagePullPolicy: IfNotPresent
         # This copies your settings from the Read-Only source to the Writable destination
         # -L follows links (crucial for ConfigMaps)
@@ -32,7 +32,7 @@ spec:
       # 2. The Main Application
       containers:
       - name: homepage
-        image: ghcr.io/gethomepage/homepage:latest
+        image: ghcr.io/gethomepage/homepage:v1.9.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
