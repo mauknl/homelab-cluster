@@ -32,20 +32,20 @@ data:
             icon: vscode.png
             description: Remote IDE
 
+  kubernetes.yaml: |
+    main-cluster:
+      mode: token
+      url: https://kubernetes.default.svc
+      token: "eyJhbGciOiJSUzI1NiIsImtpZCI6Ik55ZUFtV1RWYkFlMVQ0NnVXSmkxZXN4Z01wbGJOUWVwbl9PLU9MX2pzaTgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkYXNoYm9hcmQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiaG9tZXBhZ2UtdXNlci1zZWNyZXQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiaG9tZXBhZ2UtdXNlciIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjNkNTIwZjVmLTEyZDEtNDNhNS04N2MyLWU2MGNlZGVkMzRiMiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkYXNoYm9hcmQ6aG9tZXBhZ2UtdXNlciJ9.OluucskBDJ7g_30LKBdd8tGICnwKTRoGYZjqxWKBAS33Dqv1Qb_XAnoAnWLNhV8Gxz6NyUn22wLpDf0rZh6tLpBlI5t55ZbZ0kokrbEJkyVu6aUXYjqb3lu4GNdgzWgJaNPDppX9zpy4FFP3dRj5ZxbPgNV3AtfOvn7EG2oBjrOn42hIOo1dI2laLL9jR2GsgMlMH_6RMibxG1AWBn8rMoWqStSPT11PQWSjSrEwAsIvKcqmjAUs-Le46gDCcMbazV-aSaHoxLkZ-CDZkxvqVOIeejOx5kpv3xKODqDDYQW01oUQuelei_kKESU52ZwhitlplUx_tAKky4fP9VkSZA"
+      tls-skip-verify: true
+
   widgets.yaml: |
-    - resources:
-      cputemp: true
-      tempmin: 0 # optional, minimum cpu temp
-      tempmax: 100
-    - resources: 
-      cpu: true
-      expanded: true
-    - resources:
-      expanded: true 
-      memory: true 
-    - resources:
-      expanded: true 
-      network: true 
+    - kubernetes
+        icon: kubernetes
+        cluster: main-cluster
+        cpu: true
+        memory: true
+        nodes: true
     - search:
         provider: google
         target: _blank
