@@ -33,6 +33,8 @@ data:
             icon: kubernetes
             href: https://192.168.1.179:6443
             description: "Pi Cluster Stats"
+            server: main-cluster
+            container: k3s
             widget:
               type: kubernetes
               cluster: main-cluster  # Matches the key in kubernetes.yaml
@@ -54,6 +56,7 @@ data:
             description: Remote IDE
 
   widgets.yaml: |
+    - resour
     - search:
         provider: google
         target: _blank
