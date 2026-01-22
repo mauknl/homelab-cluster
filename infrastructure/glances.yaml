@@ -14,11 +14,11 @@ spec:
       labels:
         app: glances
     spec:
-      # 1. Host Network allows seeing real Upload/Download speeds
+      # Host Network allows seeing real Upload/Download speeds
       hostNetwork: true
       containers:
       - name: glances
-        image: nicolargo/glances:latest-alpine
+        image: nicolargo/glances:latest-full
         command: ["/usr/local/bin/glances", "-w"]
         resources:
           limits:
@@ -29,7 +29,7 @@ spec:
         - containerPort: 61208
           hostPort: 61208
           name: http
-        # 2. MOUNTS: This lets Glances read the Hardware Sensors (Temp)
+        # Mounts for Temperature and Docker stats
         volumeMounts:
         - mountPath: /sys/class/thermal
           name: thermal
