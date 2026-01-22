@@ -56,7 +56,23 @@ data:
             description: Remote IDE
 
   widgets.yaml: |
-    - resour
+    - resources:
+      cputemp: true
+      tempmin: 0 # optional, minimum cpu temp
+      tempmax: 100
+    - resources: 
+      cpu: true
+      expanded: true
+    - resources:
+      expanded: true 
+      memory: true 
+    - resources:
+      expanded: true 
+      disk: 
+        - /\
+    - resources:
+      expanded: true 
+      network: true 
     - search:
         provider: google
         target: _blank
