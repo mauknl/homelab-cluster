@@ -16,31 +16,8 @@ data:
         style: row
         columns: 2
 
-  settings.yaml: |
-    providers:
-      finnhub: {{FINNHUB_TOKEN}}
-
-  kubernetes.yaml: |
-    main-cluster:
-      mode: cluster
-      serviceAccount: true
-      url: https://kubernetes.default.svc
-      tls-skip-verify: true
-
   services.yaml: |
     - Infrastructure:
-        - My K3s Cluster:
-            icon: kubernetes
-            href: https://192.168.1.179:6443
-            description: "Pi Cluster Stats"
-            server: main-cluster
-            container: k3s
-            widget:
-              type: kubernetes
-              cluster: main-cluster  # Matches the key in kubernetes.yaml
-              cpu: true
-              memory: true
-              nodes: true
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
@@ -66,10 +43,6 @@ data:
     - resources:
       expanded: true 
       memory: true 
-    - resources:
-      expanded: true 
-      disk: 
-        - /\
     - resources:
       expanded: true 
       network: true 
