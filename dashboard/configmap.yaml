@@ -15,73 +15,80 @@ data:
       Development:
         style: row
         columns: 2
-  
+
   services.yaml: |
     - Infrastructure:
         # --- RASPBERRY PI 5 (Master) ---
-        - Pi 5 CPU:
+        - Pi 5 Vitals:
+            icon: raspberry-pi
+            description: "Cpu • Mem • Temp • Disk"
+            href: http://192.168.1.179:61208
             widget:
               type: customapi
-              url: http://192.168.1.179:61208/api/4/cpu
-              refreshInterval: 3000
+              url: http://192.168.1.179:61208/api/4/all
+              refreshInterval: 5000
               mappings:
-                - field: total
-                  label: "Load"
+                - field: cpu.total
+                  label: CPU
                   format: percent
-
-        - Pi 5 Memory:
-            widget:
-              type: customapi
-              url: http://192.168.1.179:61208/api/4/mem
-              refreshInterval: 10000
-              mappings:
-                - field: percent
-                  label: "RAM"
+                - field: mem.percent
+                  label: RAM
+                  format: percent
+                - field: sensors[0].value
+                  label: Temp
+                  format: "float" 
+                  suffix: "°C"
+                - field: fs[0].percent
+                  label: Disk
                   format: percent
 
         - Pi 5 Network:
+            icon: wifi
             widget:
               type: glances
               url: http://192.168.1.179:61208
               version: 4
               metric: network:wlan0
-              label: "WiFi"
+              label: "WiFi Speed"
 
         # --- RASPBERRY PI 4 (Worker) ---
-        - Pi 4 CPU:
+        - Pi 4 Vitals:
+            icon: raspberry-pi
+            description: "Cpu • Mem • Temp • Disk"
+            href: http://192.168.1.129:61208
             widget:
               type: customapi
-              url: http://192.168.1.129:61208/api/4/cpu
-              refreshInterval: 3000
+              url: http://192.168.1.129:61208/api/4/all
+              refreshInterval: 5000
               mappings:
-                - field: total
-                  label: "Load"
+                - field: cpu.total
+                  label: CPU
                   format: percent
-
-        - Pi 4 Memory:
-            widget:
-              type: customapi
-              url: http://192.168.1.129:61208/api/4/mem
-              refreshInterval: 10000
-              mappings:
-                - field: percent
-                  label: "RAM"
+                - field: mem.percent
+                  label: RAM
+                  format: percent
+                - field: sensors[0].value
+                  label: Temp
+                  format: "float"
+                  suffix: "°C"
+                - field: fs[0].percent
+                  label: Disk
                   format: percent
 
         - Pi 4 Network:
+            icon: wifi
             widget:
               type: glances
               url: http://192.168.1.129:61208
               version: 4
               metric: network:wlan0
-              label: "WiFi"
+              label: "WiFi Speed"
 
         # --- APPS ---
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
             description: GitOps
-
         - Rancher:
             href: https://rancher.192.168.1.179.nip.io
             icon: rancher.png
