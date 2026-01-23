@@ -9,6 +9,9 @@ data:
     theme: dark
     color: slate
     layout:
+      Kubernetes Cluster:
+        style: row
+        columns: 2
       Infrastructure:
         style: row
         columns: 2
@@ -84,7 +87,7 @@ data:
               metric: network:wlan0
               label: "WiFi Speed"
 
-        # --- APPS ---
+    - Infrastructure:
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
@@ -101,9 +104,10 @@ data:
             description: Remote IDE
 
   widgets.yaml: |
-    
-    - search:
+    - logo:
         icon: kubernetes
+        title: "My Cluster"
+    - search:
         provider: google
         target: _blank
     - datetime:
