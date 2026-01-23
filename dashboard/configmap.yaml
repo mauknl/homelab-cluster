@@ -18,7 +18,7 @@ data:
 
   services.yaml: |
     - Infrastructure:
-        - Raspberry Pi 5:
+        - Raspberry Pi 5 v0.1:
             icon: raspberry-pi
             # Clicking opens the full dashboard with Temp/Network/Process info
             href: http://192.168.1.179:61208
@@ -29,8 +29,8 @@ data:
               version: 4
               cpu: true
               memory: true
-              disk: /etc/hosts
-              cputemp: "cpu_thermal"
+              # disk: /etc/hosts
+              # cputemp: "cpu_thermal"
         - Raspberry Pi 4:
             icon: raspberry-pi
             # Clicking opens the full dashboard with Temp/Network/Process info
