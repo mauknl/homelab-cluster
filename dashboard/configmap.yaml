@@ -11,13 +11,13 @@ data:
     layout:
       Infrastructure:
         style: row
-        columns: 3
+        columns: 2
       Development:
         style: row
         columns: 2
 
   services.yaml: |
-    - Infrastructure:
+    - Kubernetes Cluster:
         # --- RASPBERRY PI 5 (Master) ---
         - Pi 5 Vitals:
             icon: raspberry-pi
@@ -34,7 +34,7 @@ data:
                 - field: mem.percent
                   label: RAM
                   format: percent
-                - field: sensors[0].value
+                - field: sensors[3].value
                   label: Temp
                   format: "float" 
                   suffix: "°C"
@@ -43,7 +43,7 @@ data:
                   format: percent
 
         - Pi 5 Network:
-            icon: wifi
+            icon: mdi-wifi
             widget:
               type: glances
               url: http://192.168.1.179:61208
@@ -76,7 +76,7 @@ data:
                   format: percent
 
         - Pi 4 Network:
-            icon: wifi
+            icon: mdi-wifi
             widget:
               type: glances
               url: http://192.168.1.129:61208
@@ -101,7 +101,9 @@ data:
             description: Remote IDE
 
   widgets.yaml: |
+    
     - search:
+        icon: kubernetes
         provider: google
         target: _blank
     - datetime:
