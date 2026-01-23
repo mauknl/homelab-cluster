@@ -17,80 +17,81 @@ data:
         columns: 2
   
   services.yaml: |
-  - Infrastructure:
-      # --- RASPBERRY PI 5 (Master) ---
-      - Pi 5 CPU:
-          widget:
-            type: customapi
-            url: http://192.168.1.179:61208/api/4/cpu
-            refreshInterval: 3000
-            mappings:
-              - field: total
-                label: "Load"
-                format: percent
+    - Infrastructure:
+        # --- RASPBERRY PI 5 (Master) ---
+        - Pi 5 CPU:
+            widget:
+              type: customapi
+              url: http://192.168.1.179:61208/api/4/cpu
+              refreshInterval: 3000
+              mappings:
+                - field: total
+                  label: "Load"
+                  format: percent
 
-      - Pi 5 Memory:
-          widget:
-            type: customapi
-            url: http://192.168.1.179:61208/api/4/mem
-            refreshInterval: 10000
-            mappings:
-              - field: percent
-                label: "RAM"
-                format: percent
+        - Pi 5 Memory:
+            widget:
+              type: customapi
+              url: http://192.168.1.179:61208/api/4/mem
+              refreshInterval: 10000
+              mappings:
+                - field: percent
+                  label: "RAM"
+                  format: percent
 
-      - Pi 5 Network:
-          widget:
-            type: glances
-            url: http://192.168.1.179:61208
-            version: 4
-            metric: network:wlan0
-            label: "WiFi"
+        - Pi 5 Network:
+            widget:
+              type: glances
+              url: http://192.168.1.179:61208
+              version: 4
+              metric: network:wlan0
+              label: "WiFi"
 
-      # --- RASPBERRY PI 4 (Worker) ---
-      - Pi 4 CPU:
-          widget:
-            type: customapi
-            url: http://192.168.1.129:61208/api/4/cpu
-            refreshInterval: 3000
-            mappings:
-              - field: total
-                label: "Load"
-                format: percent
+        # --- RASPBERRY PI 4 (Worker) ---
+        - Pi 4 CPU:
+            widget:
+              type: customapi
+              url: http://192.168.1.129:61208/api/4/cpu
+              refreshInterval: 3000
+              mappings:
+                - field: total
+                  label: "Load"
+                  format: percent
 
-      - Pi 4 Memory:
-          widget:
-            type: customapi
-            url: http://192.168.1.129:61208/api/4/mem
-            refreshInterval: 10000
-            mappings:
-              - field: percent
-                label: "RAM"
-                format: percent
+        - Pi 4 Memory:
+            widget:
+              type: customapi
+              url: http://192.168.1.129:61208/api/4/mem
+              refreshInterval: 10000
+              mappings:
+                - field: percent
+                  label: "RAM"
+                  format: percent
 
-      - Pi 4 Network:
-          widget:
-            type: glances
-            url: http://192.168.1.129:61208
-            version: 4
-            metric: network:wlan0
-            label: "WiFi"
+        - Pi 4 Network:
+            widget:
+              type: glances
+              url: http://192.168.1.129:61208
+              version: 4
+              metric: network:wlan0
+              label: "WiFi"
 
-      # --- APPS ---
-      - Argo CD:
-          href: https://argocd.192.168.1.179.nip.io
-          icon: argo-cd.png
-          description: GitOps
-      - Rancher:
-          href: https://rancher.192.168.1.179.nip.io
-          icon: rancher.png
-          description: Cluster Manager
+        # --- APPS ---
+        - Argo CD:
+            href: https://argocd.192.168.1.179.nip.io
+            icon: argo-cd.png
+            description: GitOps
 
-  - Development:
-      - VS Code:
-          href: https://code.192.168.1.179.nip.io
-          icon: vscode.png
-          description: Remote IDE
+        - Rancher:
+            href: https://rancher.192.168.1.179.nip.io
+            icon: rancher.png
+            description: Cluster Manager
+
+    - Development:
+        - VS Code:
+            href: https://code.192.168.1.179.nip.io
+            icon: vscode.png
+            description: Remote IDE
 
   widgets.yaml: |
     - search:
