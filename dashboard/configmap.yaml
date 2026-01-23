@@ -15,29 +15,9 @@ data:
       Development:
         style: row
         columns: 2
-
+  
   services.yaml: |
     - Infrastructure:
-        - Raspberry Pi 5:
-            icon: raspberry-pi
-            href: http://192.168.1.179:61208
-            description: "Master Node"
-            widget:
-              type: glances
-              url: http://192.168.1.179:61208
-              version: 4
-              # 1. The Anchors (Things we know work)
-              memory: true
-  
-              # 2. The Dangerous Defaults (Explicitly Kill These)
-              uptime: false       # <--- THIS is likely the hidden killer!
-              process: false      # Disable process counting
-              compress: false     # Disable compression check
-          
-              # 3. The Usual Suspects (Keep disabled until the crash stops)
-              cpu: false
-              cputemp: false
-              disk: false
         # --- RASPBERRY PI 5 (Manual Mode) ---
         - Pi 5 CPU:
             widget:
