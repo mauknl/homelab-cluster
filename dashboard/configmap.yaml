@@ -18,7 +18,7 @@ data:
 
   services.yaml: |
     - Infrastructure:
-        - Raspberry Pi 5 v0.1:
+        - Raspberry Pi 5 v0.2:
             icon: raspberry-pi
             # Clicking opens the full dashboard with Temp/Network/Process info
             href: http://192.168.1.179:61208
@@ -27,8 +27,8 @@ data:
               type: glances
               url: http://192.168.1.179:61208
               version: 4
-              cpu: true
-              memory: true
+              # cpu: true
+              # memory: true
               # disk: /etc/hosts
               # cputemp: "cpu_thermal"
         - Raspberry Pi 4:
@@ -40,10 +40,10 @@ data:
               type: glances
               url: http://192.168.1.129:61208
               version: 4
-              cpu: true
-              memory: true
+              # cpu: true
+              # memory: true
               disk: /etc/hosts
-              cputemp: "cpu_thermal"
+              # cputemp: "cpu_thermal"
         - Raspberry Pi 5 Network Speed:
             widget:
               type: glances
