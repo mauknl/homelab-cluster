@@ -29,8 +29,8 @@ data:
               version: 4
               cpu: true
               memory: true
-              disk: /
-              cputemp: true
+              disk: /etc/hosts
+              cputemp: "cpu_thermal"
         - Raspberry Pi 4:
             icon: raspberry-pi
             # Clicking opens the full dashboard with Temp/Network/Process info
@@ -42,8 +42,8 @@ data:
               version: 4
               cpu: true
               memory: true
-              disk: /
-              cputemp: true
+              disk: /etc/hosts
+              cputemp: "cpu_thermal"
         - Raspberry Pi 5 Network Speed:
             widget:
               type: glances
