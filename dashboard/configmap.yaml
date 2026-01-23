@@ -11,54 +11,97 @@ data:
     layout:
       Infrastructure:
         style: row
-        columns: 2
+        columns: 3
       Development:
         style: row
         columns: 2
 
   services.yaml: |
     - Infrastructure:
-        - Raspberry Pi 5 v0.3:
+        - Raspberry Pi 5:
             icon: raspberry-pi
-            # Clicking opens the full dashboard with Temp/Network/Process info
             href: http://192.168.1.179:61208
             description: "Master Node"
             widget:
               type: glances
               url: http://192.168.1.179:61208
               version: 4
-              cpu: false
+              # 1. The Anchors (Things we know work)
               memory: true
-              disk: false
+  
+              # 2. The Dangerous Defaults (Explicitly Kill These)
+              uptime: false       # <--- THIS is likely the hidden killer!
+              process: false      # Disable process counting
+              compress: false     # Disable compression check
+          
+              # 3. The Usual Suspects (Keep disabled until the crash stops)
+              cpu: false
               cputemp: false
-        - Raspberry Pi 4:
-            icon: raspberry-pi
-            # Clicking opens the full dashboard with Temp/Network/Process info
-            href: http://192.168.1.129:61208
-            description: "Worker Node"
+              disk: false
+        # --- RASPBERRY PI 5 (Manual Mode) ---
+        - Pi 5 CPU:
             widget:
               type: glances
-              url: http://192.168.1.129:61208
+              url: http://192.168.1.179:61208
               version: 4
-              # cpu: true
-              # memory: true
-              disk: /etc/hosts
-              # cputemp: "cpu_thermal"
-        - Raspberry Pi 5 Network Speed:
+              metric: cpu:total
+              label: "Pi 5 CPU"
+              unit: "%"
+
+        - Pi 5 Memory:
+            widget:
+              type: glances
+              url: http://192.168.1.179:61208
+              version: 4
+              metric: mem:percent
+              label: "Pi 5 RAM"
+              unit: "%"
+
+        - Pi 5 Network:
             widget:
               type: glances
               url: http://192.168.1.179:61208
               version: 4
               metric: network:wlan0
-              label: "Wifi Speed"
+              label: "Pi 5 WiFi"
+
+        # --- RASPBERRY PI 4 (Manual Mode) ---
+        - Pi 4 CPU:
+            widget:
+              type: glances
+              url: http://192.168.1.129:61208
+              version: 4
+              metric: cpu:total
+              label: "Pi 4 CPU"
+              unit: "%"
+
+        - Pi 4 Memory:
+            widget:
+              type: glances
+              url: http://192.168.1.129:61208
+              version: 4
+              metric: mem:percent
+              label: "Pi 4 RAM"
+              unit: "%"
+
+        - Pi 4 Network:
+            widget:
+              type: glances
+              url: http://192.168.1.129:61208
+              version: 4
+              metric: network:wlan0
+              label: "Pi 4 WiFi"
+
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
             description: GitOps
+
         - Rancher:
             href: https://rancher.192.168.1.179.nip.io
             icon: rancher.png
             description: Cluster Manager
+
     - Development:
         - VS Code:
             href: https://code.192.168.1.179.nip.io
