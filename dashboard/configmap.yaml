@@ -17,76 +17,80 @@ data:
         columns: 2
   
   services.yaml: |
-    - Infrastructure:
-        # --- RASPBERRY PI 5 (Manual Mode) ---
-        - Pi 5 CPU:
-            widget:
-              type: glances
-              url: http://192.168.1.179:61208
-              version: 4
-              metric: cpu:total
-              label: "Pi 5 CPU"
-              unit: "%"
+  - Infrastructure:
+      # --- RASPBERRY PI 5 (Master) ---
+      - Pi 5 CPU:
+          widget:
+            type: customapi
+            url: http://192.168.1.179:61208/api/4/cpu
+            refreshInterval: 3000
+            mappings:
+              - field: total
+                label: "Load"
+                format: percent
 
-        - Pi 5 Memory:
-            widget:
-              type: glances
-              url: http://192.168.1.179:61208
-              version: 4
-              metric: mem:percent
-              label: "Pi 5 RAM"
-              unit: "%"
+      - Pi 5 Memory:
+          widget:
+            type: customapi
+            url: http://192.168.1.179:61208/api/4/mem
+            refreshInterval: 10000
+            mappings:
+              - field: percent
+                label: "RAM"
+                format: percent
 
-        - Pi 5 Network:
-            widget:
-              type: glances
-              url: http://192.168.1.179:61208
-              version: 4
-              metric: network:wlan0
-              label: "Pi 5 WiFi"
+      - Pi 5 Network:
+          widget:
+            type: glances
+            url: http://192.168.1.179:61208
+            version: 4
+            metric: network:wlan0
+            label: "WiFi"
 
-        # --- RASPBERRY PI 4 (Manual Mode) ---
-        - Pi 4 CPU:
-            widget:
-              type: glances
-              url: http://192.168.1.129:61208
-              version: 4
-              metric: cpu:total
-              label: "Pi 4 CPU"
-              unit: "%"
+      # --- RASPBERRY PI 4 (Worker) ---
+      - Pi 4 CPU:
+          widget:
+            type: customapi
+            url: http://192.168.1.129:61208/api/4/cpu
+            refreshInterval: 3000
+            mappings:
+              - field: total
+                label: "Load"
+                format: percent
 
-        - Pi 4 Memory:
-            widget:
-              type: glances
-              url: http://192.168.1.129:61208
-              version: 4
-              metric: mem:percent
-              label: "Pi 4 RAM"
-              unit: "%"
+      - Pi 4 Memory:
+          widget:
+            type: customapi
+            url: http://192.168.1.129:61208/api/4/mem
+            refreshInterval: 10000
+            mappings:
+              - field: percent
+                label: "RAM"
+                format: percent
 
-        - Pi 4 Network:
-            widget:
-              type: glances
-              url: http://192.168.1.129:61208
-              version: 4
-              metric: network:wlan0
-              label: "Pi 4 WiFi"
+      - Pi 4 Network:
+          widget:
+            type: glances
+            url: http://192.168.1.129:61208
+            version: 4
+            metric: network:wlan0
+            label: "WiFi"
 
-        - Argo CD:
-            href: https://argocd.192.168.1.179.nip.io
-            icon: argo-cd.png
-            description: GitOps
+      # --- APPS ---
+      - Argo CD:
+          href: https://argocd.192.168.1.179.nip.io
+          icon: argo-cd.png
+          description: GitOps
+      - Rancher:
+          href: https://rancher.192.168.1.179.nip.io
+          icon: rancher.png
+          description: Cluster Manager
 
-        - Rancher:
-            href: https://rancher.192.168.1.179.nip.io
-            icon: rancher.png
-            description: Cluster Manager
-
-    - Development:
-        - VS Code:
-            href: https://code.192.168.1.179.nip.io
-            icon: vscode.png
-            description: Remote IDE
+  - Development:
+      - VS Code:
+          href: https://code.192.168.1.179.nip.io
+          icon: vscode.png
+          description: Remote IDE
 
   widgets.yaml: |
     - search:
