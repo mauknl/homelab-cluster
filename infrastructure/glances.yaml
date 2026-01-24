@@ -18,6 +18,10 @@ spec:
       hostNetwork: true
       # 2. See the host's Processes (Fixes the "2 Tasks" issue)
       hostPID: true
+
+      tolerations:
+      - operator: "Exists"
+
       containers:
       - name: glances
         image: nicolargo/glances:latest-full
