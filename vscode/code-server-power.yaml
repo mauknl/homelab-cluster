@@ -35,7 +35,7 @@ spec:
     spec:
       # A. PIN TO GEEKOM (The Power Node)
       nodeSelector:
-        kubernetes.io/hostname: "Geekom-Power"
+        kubernetes.io/hostname: "geekom-power"
 
       # B. THE GAS MASK (Allow running on tainted node)
       tolerations:
