@@ -14,7 +14,8 @@ spec:
         app: homepage
     spec:
       serviceAccountName: homepage-user
-
+      nodeSelector:
+        kubernetes.io/hostname: rpi5-master
       # 1. The Helper (Init Container)
       initContainers:
       - name: copy-config

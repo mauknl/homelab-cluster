@@ -9,6 +9,9 @@ data:
     theme: dark
     color: slate
     layout:
+      Kubernetes Cluster:
+        style: row
+        columns: 2
       Infrastructure:
         style: row
         columns: 2
@@ -17,29 +20,107 @@ data:
         columns: 2
 
   services.yaml: |
-    - Infrastructure:
-        - Raspberry Pi 5:
+    - Kubernetes Cluster:
+        # --- RASPBERRY PI 5 (Master) ---
+        - Pi 5 Vitals:
             icon: raspberry-pi
-            # Clicking opens the full dashboard with Temp/Network/Process info
+            description: "Cpu • Mem • Temp • Disk"
             href: http://192.168.1.179:61208
-            description: "Master Node"
+            widget:
+              type: customapi
+              url: http://192.168.1.179:61208/api/4/all
+              refreshInterval: 5000
+              mappings:
+                - field: cpu.total
+                  label: CPU
+                  format: percent
+                - field: mem.percent
+                  label: RAM
+                  format: percent
+                - field: sensors[3].value
+                  label: Temp
+                  format: "float" 
+                  suffix: "°C"
+                - field: fs[0].percent
+                  label: Disk
+                  format: percent
+
+        - Pi 5 Network:
+            icon: mdi-wifi
             widget:
               type: glances
               url: http://192.168.1.179:61208
-              cpu: true
-              memory: true
-              disk: /
-        - Raspberry Pi 4:
+              version: 4
+              metric: network:wlan0
+              label: "WiFi Speed"
+
+        # --- RASPBERRY PI 4 (Worker) ---
+        - Pi 4 Vitals:
             icon: raspberry-pi
-            # Clicking opens the full dashboard with Temp/Network/Process info
+            description: "Cpu • Mem • Temp • Disk"
             href: http://192.168.1.129:61208
-            description: "Worker Node"
+            widget:
+              type: customapi
+              url: http://192.168.1.129:61208/api/4/all
+              refreshInterval: 5000
+              mappings:
+                - field: cpu.total
+                  label: CPU
+                  format: percent
+                - field: mem.percent
+                  label: RAM
+                  format: percent
+                - field: sensors[0].value
+                  label: Temp
+                  format: "float"
+                  suffix: "°C"
+                - field: fs[0].percent
+                  label: Disk
+                  format: percent
+
+        - Pi 4 Network:
+            icon: mdi-wifi
             widget:
               type: glances
-              url: http://192.168.1.179:61208
-              cpu: true
-              memory: true
-              disk: /
+              url: http://192.168.1.129:61208
+              version: 4
+              metric: network:wlan0
+              label: "WiFi Speed"
+
+        # --- Geekom Power (Power-Worker) ---
+        - Geekom Vitals:
+            icon: linux
+            description: "Cpu • Mem • Temp • Disk"
+            href: http://192.168.1.195:61208
+            widget:
+              type: customapi
+              url: http://192.168.1.195:61208/api/4/all
+              refreshInterval: 5000
+              mappings:
+                - field: cpu.total
+                  label: CPU
+                  format: percent
+                - field: mem.percent
+                  label: RAM
+                  format: percent
+                - field: sensors[7].value
+                  label: Temp
+                  format: "float" 
+                  suffix: "°C"
+                - field: fs[0].percent
+                  label: Disk
+                  format: percent
+
+        - Geekom Network:
+            icon: mdi-wifi
+            widget:
+              type: glances
+              url: http://192.168.1.195:61208
+              version: 4
+              metric: network:wlan0
+              label: "WiFi Speed"
+
+    - Infrastructure:
         - Argo CD:
             href: https://argocd.192.168.1.179.nip.io
             icon: argo-cd.png
@@ -48,6 +129,7 @@ data:
             href: https://rancher.192.168.1.179.nip.io
             icon: rancher.png
             description: Cluster Manager
+
     - Development:
         - VS Code:
             href: https://code.192.168.1.179.nip.io
@@ -55,6 +137,9 @@ data:
             description: Remote IDE
 
   widgets.yaml: |
+    - logo:
+        icon: kubernetes
+        title: "My Cluster"
     - search:
         provider: google
         target: _blank
