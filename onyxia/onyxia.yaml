@@ -16,7 +16,7 @@ spec:
           nodeSelector:
             kubernetes.io/hostname: rpi5-master
           
-          # [CRITICAL FIX] DNS Hijack: Map external domain to internal IP
+          # [CRITICAL FIX] DNS Hijack: Map external domain to internal Traefik IP
           hostAliases:
             - ip: "10.43.157.160"
               hostnames:
@@ -25,15 +25,13 @@ spec:
 
           # Force OIDC Settings via Environment Variables
           extraEnv:
-            # 1. Force OIDC Mode (Disable John Doe)
             - name: AUTHENTICATION_MODE
               value: "openidconnect"
-            # 2. Point to Keycloak
             - name: OIDC_ISSUER_URI
               value: "https://auth.100.83.110.77.nip.io/realms/datalab"
             - name: OIDC_CLIENT_ID
               value: "onyxia"
-            # 3. Trust the Self-Signed Cert (Internal traffic uses this)
+            # Trust Self-Signed Certs (since we are staying internal)
             - name: OIDC_SKIP_TLS_VERIFY 
               value: "true"
             
@@ -66,7 +64,6 @@ spec:
               hosts:
                 - datalab.100.83.110.77.nip.io
 
-        # Standard Security Config (Backed up by extraEnv above)
         security:
           oidc:
             enabled: true
@@ -108,3 +105,14 @@ spec:
               kubectl get secret wildcard-tls -n onyxia -o json \
               | jq 'del(.metadata.namespace,.metadata.creationTimestamp,.metadata.resourceVersion,.metadata.uid)' \
               | kubectl apply -f -
+
+  # --- THIS IS THE PART THAT WAS MISSING ---
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: onyxia
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
