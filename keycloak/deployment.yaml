@@ -62,7 +62,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: 100.88.110.77.nip.io
+  - host: auth.100.88.110.77.nip.io
     http:
       paths:
       - path: /
