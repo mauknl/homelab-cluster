@@ -1,0 +1,71 @@
+api:
+  nodeSelector:
+    kubernetes.io/hostname: rpi5-master
+  env:
+    authentication.mode: "openidconnect"
+    oidc.clientID: "onyxia"
+    oidc.issuer-uri: "https://auth.100.83.110.77.nip.io/realms/datalab"
+    oidc.skip-tls-verify: "true"
+  extraEnv:
+    - name: ONYXIA_S3_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: onyxia-s3-creds
+          key: accessKeyId
+    - name: ONYXIA_S3_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: onyxia-s3-creds
+          key: secretAccessKey
+
+web:
+  nodeSelector:
+    kubernetes.io/hostname: rpi5-master
+  env:
+    OIDC_CLIENT_ID: "onyxia"
+    OIDC_URL: "https://auth.100.83.110.77.nip.io/realms/datalab"
+
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - host: datalab.100.83.110.77.nip.io
+      paths: ["/"]
+  tls:
+    - secretName: wildcard-tls
+      hosts:
+        - datalab.100.83.110.77.nip.io
+
+# --- User Workspace Configuration ---
+regions:
+  - id: geekom-cluster
+    name: "Geekom Lab (x86)"
+    type: kubernetes
+    namespacePrefix: "user-"
+    nodeSelector:
+      kubernetes.io/hostname: geekom-power
+    tolerations:
+      - key: "workload"
+        operator: "Equal"
+        value: "heavy"
+        effect: "NoSchedule"
+    ingress:
+      domain: "100.83.110.77.nip.io"
+      ingressClassName: traefik
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    tls:
+        enabled: true
+        secretName: wildcard-tls
+    initScript: |
+      kubectl get secret wildcard-tls -n onyxia -o json \
+      | jq 'del(.metadata.namespace,.metadata.creationTimestamp,.metadata.resourceVersion,.metadata.uid)' \
+      | kubectl apply -f -
+
+s3:
+  enabled: true
+  URL: "http://minio.minio.svc:9000"
+  region: "us-east-1"
+  accessKeyId: ""
+  secretAccessKey: ""

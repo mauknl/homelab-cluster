@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onyxia-api
+spec:
+  template:
+    spec:
+      hostAliases:
+        - ip: "10.43.157.160"
+          hostnames:
+            - "auth.100.83.110.77.nip.io"
+            - "datalab.100.83.110.77.nip.io"

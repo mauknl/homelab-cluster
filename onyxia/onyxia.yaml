@@ -6,96 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://inseefrlab.github.io/onyxia
-    chart: onyxia
-    targetRevision: 10.32.4
-    helm:
-      values: |
-        # --- 1. Pin Interface to Raspberry Pi ---
-        api:
-          nodeSelector:
-            kubernetes.io/hostname: rpi5-master
-          # Inject S3 Credentials securely from the secret we created
-          extraEnv:
-            - name: ONYXIA_S3_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: onyxia-s3-creds
-                  key: accessKeyId
-            - name: ONYXIA_S3_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: onyxia-s3-creds
-                  key: secretAccessKey
-        
-        web:
-          nodeSelector:
-            kubernetes.io/hostname: rpi5-master
-
-        # --- 2. Onyxia General Settings ---
-        ingress:
-          enabled: true
-          annotations:
-            traefik.ingress.kubernetes.io/router.entrypoints: websecure
-          hosts:
-            - host: datalab.100.83.110.77.nip.io
-              paths: ["/"]
-          tls:
-            - secretName: wildcard-tls
-              hosts:
-                - datalab.100.83.110.77.nip.io
-
-        security:
-          oidc:
-            enabled: true
-            clientId: onyxia
-            issuerUri: "https://auth.100.83.110.77.nip.io/realms/datalab"
-            ssl:
-              trustStore:
-                enabled: false # Ignore Java's strict CA check
-
-        s3:
-          enabled: true
-          URL: "http://minio.minio.svc:9000"
-          region: "us-east-1"
-          # We leave these empty here because we inject them via extraEnv above!
-          accessKeyId: ""
-          secretAccessKey: ""
-
-        # --- 3. User Workspace Configuration ---
-        regions:
-          - id: geekom-cluster
-            name: "Geekom Lab (x86)"
-            description: "High performance x86 workers"
-            type: kubernetes
-            namespacePrefix: "user-"
-            
-            # Force User Pods to Geekom
-            nodeSelector:
-              kubernetes.io/hostname: geekom-power
-
-            tolerations:
-            - key: "workload"
-              operator: "Equal"
-              value: "heavy"
-              effect: "NoSchedule"
-
-            ingress:
-              domain: "100.83.110.77.nip.io"
-              ingressClassName: traefik
-              annotations:
-                traefik.ingress.kubernetes.io/router.entrypoints: websecure
-            
-            # ENABLE TLS (Secure User Pods)
-            tls:
-               enabled: true
-               secretName: wildcard-tls
-            
-            # THE MAGIC SCRIPT: Copies the certificate to the user's namespace
-            initScript: |
-              kubectl get secret wildcard-tls -n onyxia -o json \
-              | jq 'del(.metadata.namespace,.metadata.creationTimestamp,.metadata.resourceVersion,.metadata.uid)' \
-              | kubectl apply -f -
+    repoURL: https://github.com/mauknl/homelab-cluster.git
+    targetRevision: main
+    path: onyxia   # <--- IMPORTANT: Point to the folder containing kustomization.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: onyxia
