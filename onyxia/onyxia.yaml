@@ -12,11 +12,33 @@ spec:
     helm:
       values: |
         # --- 1. Pin Interface to Raspberry Pi ---
+        # --- 1. Onyxia API Configuration ---
         api:
           nodeSelector:
             kubernetes.io/hostname: rpi5-master
-          # Inject S3 Credentials securely from the secret we created
+          
+          # FORCE Configuration via Environment Variables
+          # We inject these directly into the container to stop the "John" fallback
           extraEnv:
+            # 1. Force Authentication Mode to OIDC (Disables Demo Mode)
+            - name: AUTHENTICATION_MODE
+              value: "openidconnect"
+            
+            # 2. Tell Onyxia where Keycloak is (Frontend vs Backend)
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "https://auth.100.83.110.77.nip.io/realms/datalab"
+            
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+              value: "http://keycloak.keycloak.svc:8080/realms/datalab/protocol/openid-connect/certs"
+            
+            # 3. Security & Client Settings
+            - name: OIDC_CLIENT_ID
+              value: "onyxia"
+            
+            - name: OIDC_USERNAME_CLAIM
+              value: "preferred_username"
+              
+            # 4. S3 Credentials
             - name: ONYXIA_S3_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -44,18 +66,6 @@ spec:
             - secretName: wildcard-tls
               hosts:
                 - datalab.100.83.110.77.nip.io
-
-        security:
-          oidc:
-            enabled: true
-            clientId: onyxia
-            # 1. Frontend URL (What the browser sees)
-            issuerUri: "https://auth.100.83.110.77.nip.io/realms/datalab"
-            # 2. Backend URL (What the Pod sees - The Magic Bypass)
-            jwkUri: "http://keycloak.keycloak.svc:8080/realms/datalab/protocol/openid-connect/certs"
-            ssl:
-              trustStore:
-                enabled: false
 
         s3:
           enabled: true
