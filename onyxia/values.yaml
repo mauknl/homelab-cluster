@@ -50,13 +50,18 @@ regions:
     name: "Geekom Lab (x86)"
     type: kubernetes
     namespacePrefix: "user-"
-    nodeSelector:
-      kubernetes.io/hostname: geekom-power
-    tolerations:
-      - key: "workload"
-        operator: "Equal"
-        value: "heavy"
-        effect: "NoSchedule"
+
+    services:
+      type: "kubernetes"
+      singleNamespace: false
+      nodeSelector:
+        kubernetes.io/hostname: geekom-power
+      tolerations:
+        - key: "workload"
+          operator: "Equal"
+          value: "heavy"
+          effect: "NoSchedule"
+
     ingress:
       domain: "100.83.110.77.nip.io"
       ingressClassName: traefik
