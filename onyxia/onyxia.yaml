@@ -6,9 +6,120 @@ metadata:
 spec:
   project: default
   source:
+<<<<<<< HEAD
     repoURL: https://github.com/mauknl/homelab-cluster.git
     targetRevision: main
     path: onyxia   # <--- IMPORTANT: Point to the folder containing kustomization.yaml
+=======
+    repoURL: https://inseefrlab.github.io/onyxia
+    chart: onyxia
+    targetRevision: 10.32.0
+    helm:
+      values: |
+        # --- 1. Onyxia System (Runs on Raspberry Pi) ---
+        api:
+          nodeSelector:
+            kubernetes.io/hostname: rpi5-master
+          
+          # The "Official" Fix for "Welcome John" & NAT Loopback
+          env:
+            # Force OIDC Mode
+            authentication.mode: "openidconnect"
+            
+            # Keycloak Identifiers
+            oidc.clientID: "onyxia"
+            oidc.username-claim: "preferred_username"
+            
+            # 1. Public URL (Browser uses this)
+            oidc.issuer-uri: "https://auth.100.83.110.77.nip.io/realms/datalab"
+            
+            # 2. Internal Network Bypass (Pod uses this to talk to Keycloak directly)
+            # This fixes the hang/timeout without needing hostAliases
+            spring.security.oauth2.resourceserver.jwt.jwk-set-uri: "http://keycloak.keycloak.svc:8080/realms/datalab/protocol/openid-connect/certs"
+            
+            # Trust internal self-signed certs
+            oidc.skip-tls-verify: "true"
+
+          # S3 Credentials injection
+          extraEnv:
+            - name: ONYXIA_S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: onyxia-s3-creds
+                  key: accessKeyId
+            - name: ONYXIA_S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: onyxia-s3-creds
+                  key: secretAccessKey
+
+        web:
+          nodeSelector:
+            kubernetes.io/hostname: rpi5-master
+          env:
+            # The Web UI needs to know where to send the user
+            OIDC_CLIENT_ID: "onyxia"
+            OIDC_URL: "https://auth.100.83.110.77.nip.io/realms/datalab"
+
+        # --- 2. Ingress (Access) ---
+        ingress:
+          enabled: true
+          annotations:
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+          hosts:
+            - host: datalab.100.83.110.77.nip.io
+              paths: ["/"]
+          tls:
+            - secretName: wildcard-tls
+              hosts:
+                - datalab.100.83.110.77.nip.io
+
+        # --- 3. User Workspaces (Runs on Geekom) ---
+        regions:
+          - id: geekom-cluster
+            name: "Geekom Lab (x86)"
+            description: "High performance x86 workers"
+            type: kubernetes
+            namespacePrefix: "user-"
+            
+            # Force pods to the Geekom node
+            nodeSelector:
+              kubernetes.io/hostname: geekom-power
+
+            # "Ignore" the taint so pods can schedule there
+            tolerations:
+              - key: "workload"
+                operator: "Equal"
+                value: "heavy"
+                effect: "NoSchedule"
+
+            # Enable HTTPS for User Services
+            ingress:
+              domain: "100.83.110.77.nip.io"
+              ingressClassName: traefik
+              annotations:
+                traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            
+            # Copy the Wildcard Cert to user namespaces automatically
+            tls:
+               enabled: true
+               secretName: wildcard-tls
+            initScript: |
+              kubectl get secret wildcard-tls -n onyxia -o json \
+              | jq 'del(.metadata.namespace,.metadata.creationTimestamp,.metadata.resourceVersion,.metadata.uid)' \
+              | kubectl apply -f -
+
+        # --- 4. S3 Configuration ---
+        s3:
+          enabled: true
+          URL: "http://minio.minio.svc:9000"
+          region: "us-east-1"
+          # Empty here because we injected them in api.extraEnv above
+          accessKeyId: ""
+          secretAccessKey: ""
+
+  # --- ArgoCD Application Config (Required!) ---
+>>>>>>> refs/remotes/origin/main
   destination:
     server: https://kubernetes.default.svc
     namespace: onyxia
