@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://inseefrlab.github.io/onyxia
     chart: onyxia
-    targetRevision: 10.32.4
+    targetRevision: 10.32.0
     helm:
       values: |
         # --- 1. Onyxia API Configuration ---
@@ -16,22 +16,24 @@ spec:
           nodeSelector:
             kubernetes.io/hostname: rpi5-master
           
-          # FORCE TRAFFIC TO STAY INSIDE THE CLUSTER
+          # [CRITICAL FIX] DNS Hijack: Map external domain to internal IP
           hostAliases:
             - ip: "10.43.157.160"
               hostnames:
                 - "auth.100.83.110.77.nip.io"
                 - "datalab.100.83.110.77.nip.io"
 
-          # Force OIDC Configuration
+          # Force OIDC Settings via Environment Variables
           extraEnv:
+            # 1. Force OIDC Mode (Disable John Doe)
             - name: AUTHENTICATION_MODE
               value: "openidconnect"
+            # 2. Point to Keycloak
             - name: OIDC_ISSUER_URI
               value: "https://auth.100.83.110.77.nip.io/realms/datalab"
             - name: OIDC_CLIENT_ID
               value: "onyxia"
-            # Critical: Trust the self-signed cert since we are going internal
+            # 3. Trust the Self-Signed Cert (Internal traffic uses this)
             - name: OIDC_SKIP_TLS_VERIFY 
               value: "true"
             
@@ -51,7 +53,7 @@ spec:
           nodeSelector:
             kubernetes.io/hostname: rpi5-master
 
-        # --- 2. Onyxia General Settings ---
+        # --- 2. General Settings ---
         ingress:
           enabled: true
           annotations:
@@ -64,11 +66,20 @@ spec:
               hosts:
                 - datalab.100.83.110.77.nip.io
 
+        # Standard Security Config (Backed up by extraEnv above)
+        security:
+          oidc:
+            enabled: true
+            clientId: onyxia
+            issuerUri: "https://auth.100.83.110.77.nip.io/realms/datalab"
+            ssl:
+              trustStore:
+                enabled: false
+
         s3:
           enabled: true
           URL: "http://minio.minio.svc:9000"
           region: "us-east-1"
-          # We leave these empty here because we inject them via extraEnv above!
           accessKeyId: ""
           secretAccessKey: ""
 
@@ -76,42 +87,24 @@ spec:
         regions:
           - id: geekom-cluster
             name: "Geekom Lab (x86)"
-            description: "High performance x86 workers"
             type: kubernetes
             namespacePrefix: "user-"
-            
-            # Force User Pods to Geekom
             nodeSelector:
               kubernetes.io/hostname: geekom-power
-
             tolerations:
-            - key: "workload"
-              operator: "Equal"
-              value: "heavy"
-              effect: "NoSchedule"
-
+              - key: "workload"
+                operator: "Equal"
+                value: "heavy"
+                effect: "NoSchedule"
             ingress:
               domain: "100.83.110.77.nip.io"
               ingressClassName: traefik
               annotations:
                 traefik.ingress.kubernetes.io/router.entrypoints: websecure
-            
-            # ENABLE TLS (Secure User Pods)
             tls:
                enabled: true
                secretName: wildcard-tls
-            
-            # THE MAGIC SCRIPT: Copies the certificate to the user's namespace
             initScript: |
               kubectl get secret wildcard-tls -n onyxia -o json \
               | jq 'del(.metadata.namespace,.metadata.creationTimestamp,.metadata.resourceVersion,.metadata.uid)' \
               | kubectl apply -f -
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: onyxia
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
