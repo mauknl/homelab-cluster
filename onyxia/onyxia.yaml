@@ -49,10 +49,13 @@ spec:
           oidc:
             enabled: true
             clientId: onyxia
+            # 1. Frontend URL (What the browser sees)
             issuerUri: "https://auth.100.83.110.77.nip.io/realms/datalab"
+            # 2. Backend URL (What the Pod sees - The Magic Bypass)
+            jwkUri: "http://keycloak.keycloak.svc:8080/realms/datalab/protocol/openid-connect/certs"
             ssl:
               trustStore:
-                enabled: false # Ignore Java's strict CA check
+                enabled: false
 
         s3:
           enabled: true
