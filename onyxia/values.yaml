@@ -1,6 +1,13 @@
 api:
   nodeSelector:
     kubernetes.io/hostname: rpi5-master
+
+  podHostAliases:
+    - ip: "10.43.157.160"
+      hostnames:
+        - "auth.100.83.110.77.nip.io"
+        - "datalab.100.83.110.77.nip.io"
+
   env:
     authentication.mode: "openidconnect"
     oidc.clientID: "onyxia"
