@@ -59,8 +59,14 @@ kind: Ingress
 metadata:
   name: keycloak
   namespace: keycloak
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   ingressClassName: traefik
+  tls:
+  - hosts:
+    - auth.100.83.110.77.nip.io
+    secretName: wildcard-tls
   rules:
   - host: auth.100.83.110.77.nip.io
     http:
