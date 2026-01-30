@@ -20,6 +20,8 @@ spec:
         image: quay.io/keycloak/keycloak:26.0.0
         args: ["start-dev"]
         env:
+        - name: KC_HOSTNAME
+          value: "https://auth.100.83.110.77.nip.io"
         - name: KEYCLOAK_ADMIN
           valueFrom:
             secretKeyRef:
