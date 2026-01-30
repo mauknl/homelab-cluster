@@ -11,34 +11,31 @@ spec:
     targetRevision: 10.32.4
     helm:
       values: |
-        # --- 1. Pin Interface to Raspberry Pi ---
         # --- 1. Onyxia API Configuration ---
         api:
           nodeSelector:
             kubernetes.io/hostname: rpi5-master
           
-          # FORCE Configuration via Environment Variables
-          # We inject these directly into the container to stop the "John" fallback
+          # FORCE TRAFFIC TO STAY INSIDE THE CLUSTER
+          hostAliases:
+            - ip: "10.43.157.160"
+              hostnames:
+                - "auth.100.83.110.77.nip.io"
+                - "datalab.100.83.110.77.nip.io"
+
+          # Force OIDC Configuration
           extraEnv:
-            # 1. Force Authentication Mode to OIDC (Disables Demo Mode)
             - name: AUTHENTICATION_MODE
               value: "openidconnect"
-            
-            # 2. Tell Onyxia where Keycloak is (Frontend vs Backend)
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+            - name: OIDC_ISSUER_URI
               value: "https://auth.100.83.110.77.nip.io/realms/datalab"
-            
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
-              value: "http://keycloak.keycloak.svc:8080/realms/datalab/protocol/openid-connect/certs"
-            
-            # 3. Security & Client Settings
             - name: OIDC_CLIENT_ID
               value: "onyxia"
+            # Critical: Trust the self-signed cert since we are going internal
+            - name: OIDC_SKIP_TLS_VERIFY 
+              value: "true"
             
-            - name: OIDC_USERNAME_CLAIM
-              value: "preferred_username"
-              
-            # 4. S3 Credentials
+            # S3 Credentials
             - name: ONYXIA_S3_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -49,7 +46,7 @@ spec:
                 secretKeyRef:
                   name: onyxia-s3-creds
                   key: secretAccessKey
-        
+
         web:
           nodeSelector:
             kubernetes.io/hostname: rpi5-master
