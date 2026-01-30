@@ -51,13 +51,14 @@ regions:
     type: kubernetes
     namespacePrefix: "user-"
 
-    nodeSelector:
-      kubernetes.io/hostname: geekom-power
-    tolerations:
-      - key: "workload"
-        operator: "Equal"
-        value: "heavy"
-        effect: "NoSchedule"
+    user:
+      nodeSelector:
+        kubernetes.io/hostname: geekom-power
+      tolerations:
+        - key: "workload"
+          operator: "Equal"
+          value: "heavy"
+          effect: "NoSchedule"
 
     services:
       type: "kubernetes"
